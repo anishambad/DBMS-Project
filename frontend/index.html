@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBMS Disaster Management Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+        h1, h2 { color: #2c3e50; }
+        .data-section, .form-section { 
+            background-color: #fff; 
+            margin-bottom: 30px; 
+            padding: 20px; 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .event-item { 
+            border-bottom: 1px solid #eee; 
+            padding: 10px 0; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .event-item:last-child { border-bottom: none; }
+        .event-details { flex-grow: 1; }
+        .event-actions button { 
+            margin-left: 10px; 
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        #message-area { 
+            padding: 10px; 
+            border-radius: 4px; 
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        /* Style for form elements across all sections */
+        form label { display: inline-block; width: 150px; margin-right: 10px; }
+        form input, form select { margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        form button { background-color: #3498db; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        form button:hover { background-color: #2980b9; }
+    </style>
+</head>
+<body>
+    <h1>Disaster Management Dashboard</h1>
+
+    <div id="message-area"></div>
+
+    <div class="data-section">
+        <h2>Active Emergency Events</h2>
+        <div id="events-container">
+            <p>Loading events...</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h2>Add New Emergency Event (Create)</h2>
+        <form id="create-event-form">
+            <label for="new_disaster_type">Type:</label>
+            <input type="text" id="new_disaster_type" name="DISASTER_TYPE" required placeholder="e.g., Earthquake"><br>
+
+            <label for="new_start_date">Start Date:</label>
+            <input type="date" id="new_start_date" name="START_DATE" required><br>
+
+            <button type="submit">Create Event</button>
+        </form>
+    </div>
+
+    <hr>
+    
+    <div class="data-section">
+        <h2>Available Resources Inventory</h2>
+        <div id="resources-container">
+            <p>Loading resources...</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h2>Add New Resource (Create)</h2>
+        <form id="create-resource-form">
+            <label for="new_resource_type">Type:</label>
+            <input type="text" id="new_resource_type" name="RESOURCE_TYPE" required placeholder="e.g., Water Bottle"><br>
+
+            <label for="new_quantity">Quantity:</label>
+            <input type="number" id="new_quantity" name="QUANTITY" required placeholder="e.g., 5000"><br>
+            
+            <label for="new_location">Location:</label>
+            <input type="text" id="new_location" name="LOCATION" required placeholder="e.g., Warehouse A"><br>
+            <button type="submit">Add Resource</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <div class="data-section">
+        <h2>Resource Allocation Overview</h2>
+        <div id="allocation-container">
+            <p>Loading allocations...</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h2>Allocate Resource to Event (Create Allocation)</h2>
+        <form id="create-allocation-form">
+            <label for="new_emg_id">Emergency Event ID:</label>
+            <input type="number" id="new_emg_id" name="EMG_ID" required placeholder="e.g., 101"><br>
+
+            <label for="new_res_id">Resource ID:</label>
+            <input type="number" id="new_res_id" name="RES_ID" required placeholder="e.g., 201"><br>
+
+            <label for="new_quantity_needed">Quantity Needed:</label>
+            <input type="number" id="new_quantity_needed" name="QUANTITY_NEEDED" required placeholder="e.g., 500"><br>
+
+            <button type="submit">Create Allocation</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
