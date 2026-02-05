@@ -1,4 +1,3 @@
-// frontend/script.js
 
 const BACKEND_URL = 'http://localhost:5000'; 
 
@@ -8,15 +7,13 @@ function displayMessage(text, isError = false) {
     messageArea.textContent = text;
     messageArea.style.color = isError ? 'red' : 'green';
     setTimeout(() => {
-        messageArea.textContent = ''; // Clear message after 5 seconds
+        messageArea.textContent = ''; 
     }, 5000);
 }
 
-// ======================================================================
-// === EMERGENCY_EVENT CRUD FUNCTIONS (FIXED Display Logic) =============
-// ======================================================================
 
-// --- 1. READ (GET) FUNCTION (FIXED: Uses correct DB columns) ---
+
+// 1. READ (GET) FUNCTION 
 async function loadEmergencyEvents() {
     try {
         const timestamp = new Date().getTime();
@@ -45,7 +42,7 @@ async function loadEmergencyEvents() {
                 year: 'numeric', month: 'short', day: 'numeric'
             }) : 'N/A';
 
-            // FIX: Uses DISASTER_TYPE and START_DATE from the database
+           
             item.innerHTML = `
                 <div class="event-details" id="details-${event.EMG_ID}">
                     <strong>ID: ${event.EMG_ID}</strong> | 
@@ -67,7 +64,7 @@ async function loadEmergencyEvents() {
     }
 }
 
-// --- 2. CREATE (POST) FUNCTION (NOW INCLUDES CLIENT-SIDE VALIDATION) ---
+//  2. CREATE (POST) FUNCTION 
 async function handleCreateEvent(event) {
     event.preventDefault(); 
     
@@ -76,12 +73,12 @@ async function handleCreateEvent(event) {
     const disasterType = formData.get('DISASTER_TYPE').trim();
     const startDate = formData.get('START_DATE');
 
-    // --- Validation Check ---
+    // Validation Check 
     if (!disasterType || !startDate) {
         displayMessage('Error: Type and Start Date are required.', true);
         return;
     }
-    // --- End Validation ---
+    // End Validation 
 
     const eventData = {
         DISASTER_TYPE: disasterType,
@@ -112,7 +109,7 @@ async function handleCreateEvent(event) {
 }
 
 
-// --- 3. DELETE FUNCTION ---
+// 3. DELETE FUNCTION 
 async function handleDeleteEvent(id) {
     if (!confirm(`Are you sure you want to delete Event ID ${id}? This may fail if it has related records.`)) {
         return;
@@ -136,7 +133,7 @@ async function handleDeleteEvent(id) {
 }
 
 
-// --- 4. UPDATE (PUT) - SHOW FORM FUNCTION ---
+// 4. UPDATE (PUT) SHOW FORM FUNCTION 
 async function showEditForm(id) {
     const timestamp = new Date().getTime();
     const response = await fetch(`${BACKEND_URL}/api/events?t=${timestamp}`); 
@@ -148,11 +145,11 @@ async function showEditForm(id) {
         return;
     }
     
-    // Format the date for the input type="date"
+    
     const dateValue = eventToEdit.START_DATE ? new Date(eventToEdit.START_DATE).toISOString().split('T')[0] : '';
 
 
-    // Create the edit form HTML (Corrected fields)
+    // edit form HTML
     const editFormHTML = `
     <form id="edit-event-form-${id}" class="edit-form-section" onsubmit="event.preventDefault(); handleUpdateEvent(event, ${id})">
         <h4>Editing Event ID: ${id}</h4>
@@ -184,7 +181,7 @@ async function showEditForm(id) {
 }
 
 
-// --- 5. UPDATE (PUT) - SUBMISSION HANDLER ---
+//  5. UPDATE (PUT) - SUBMISSION HANDLER
 async function handleUpdateEvent(event, id) {
     const form = event.target;
     const formData = new FormData(form);
@@ -216,11 +213,9 @@ async function handleUpdateEvent(event, id) {
 }
 
 
-// ======================================================================
-// === RESOURCES CRUD FUNCTIONS (FINAL FIXES FOR LOCATION INTEGRATION) ==
-// ======================================================================
 
-// --- 6. READ (GET) RESOURCES FUNCTION ---
+
+//  6. READ (GET) RESOURCES FUNCTION
 async function loadResources() {
     try {
         const timestamp = new Date().getTime();
@@ -242,7 +237,7 @@ async function loadResources() {
             const item = document.createElement('div');
             item.className = 'event-item'; 
             
-            // FIX: Correctly displays LOCATION from the data returned by the server
+            
             item.innerHTML = `
                 <div class="event-details" id="resource-details-${resource.RES_ID}">
                     <strong>ID: ${resource.RES_ID}</strong> | 
@@ -264,7 +259,7 @@ async function loadResources() {
     }
 }
 
-// --- 7. CREATE (POST) RESOURCE FUNCTION (NOW INCLUDES LOCATION) ---
+// 7. CREATE (POST) RESOURCE FUNCTION
 async function handleCreateResource(event) {
     event.preventDefault(); 
     const form = event.target;
@@ -272,7 +267,7 @@ async function handleCreateResource(event) {
     
     const resourceType = formData.get('RESOURCE_TYPE').trim();
     const quantity = parseInt(formData.get('QUANTITY'));
-    // FIX: Get LOCATION from the form
+    
     const location = formData.get('LOCATION').trim(); 
 
     // --- Validation Check ---
@@ -282,7 +277,7 @@ async function handleCreateResource(event) {
     }
     // --- End Validation ---
     
-    // FIX: Include LOCATION in the data sent to the server
+  
     const resourceData = {
         RESOURCE_TYPE: resourceType,
         QUANTITY: quantity,
@@ -312,7 +307,7 @@ async function handleCreateResource(event) {
     }
 }
 
-// --- 8. DELETE RESOURCE FUNCTION ---
+// 8. DELETE RESOURCE FUNCTION 
 async function handleDeleteResource(id) {
     if (!confirm(`Are you sure you want to delete Resource ID ${id}?`)) return;
     
@@ -331,7 +326,7 @@ async function handleDeleteResource(id) {
     }
 }
 
-// --- 9. UPDATE (PUT) - SHOW RESOURCE FORM FUNCTION (FIXED: Includes Location) ---
+//  9. UPDATE (PUT) - SHOW RESOURCE FORM FUNCTION 
 async function showEditResourceForm(id) {
     const timestamp = new Date().getTime();
     const response = await fetch(`${BACKEND_URL}/api/resources?t=${timestamp}`); 
@@ -343,7 +338,7 @@ async function showEditResourceForm(id) {
         return;
     }
     
-    // FIX: Added LOCATION input field to the edit form HTML
+    
     const editFormHTML = `
         <form id="edit-resource-form-${id}" class="edit-form-section" onsubmit="event.preventDefault(); handleUpdateResource(event, ${id})">
             <h4>Editing Resource ID: ${id}</h4>
@@ -365,12 +360,12 @@ async function showEditResourceForm(id) {
     container.innerHTML = editFormHTML;
 }
 
-// --- 10. UPDATE (PUT) - RESOURCE SUBMISSION HANDLER (NOW INCLUDES LOCATION) ---
+// 10. UPDATE (PUT) - RESOURCE SUBMISSION HANDLER 
 async function handleUpdateResource(event, id) {
     const form = event.target;
     const formData = new FormData(form);
     
-    // FIX: Get LOCATION from the edit form
+    
     const updatedData = {
         RESOURCE_TYPE: formData.get('RESOURCE_TYPE'),
         QUANTITY: parseInt(formData.get('QUANTITY')),
@@ -400,11 +395,9 @@ async function handleUpdateResource(event, id) {
 }
 
 
-// ======================================================================
-// === RESOURCE_ALLOCATION CRUD FUNCTIONS =================================
-// ======================================================================
 
-// --- 11. READ (GET) ALLOCATIONS FUNCTION ---
+
+//  11. READ (GET) ALLOCATIONS FUNCTION 
 async function loadAllocations() {
     try {
         const timestamp = new Date().getTime();
@@ -446,7 +439,7 @@ async function loadAllocations() {
     }
 }
 
-// --- 12. CREATE (POST) ALLOCATION FUNCTION (NOW INCLUDES CLIENT-SIDE VALIDATION) ---
+//  12. CREATE (POST) ALLOCATION FUNCTION 
 async function handleCreateAllocation(event) {
     event.preventDefault(); 
     const form = event.target;
@@ -456,12 +449,12 @@ async function handleCreateAllocation(event) {
     const resId = parseInt(formData.get('RES_ID'));
     const quantityNeeded = parseInt(formData.get('QUANTITY_NEEDED'));
 
-    // --- Validation Check ---
+    //  Validation Check 
     if (isNaN(emgId) || emgId <= 0 || isNaN(resId) || resId <= 0 || isNaN(quantityNeeded) || quantityNeeded <= 0) {
         displayMessage('Error: All IDs must be positive numbers, and Quantity Needed must be a positive number.', true);
         return;
     }
-    // --- End Validation ---
+    //  End Validation 
     
     const allocationData = {
         EMG_ID: emgId,
@@ -491,7 +484,7 @@ async function handleCreateAllocation(event) {
     }
 }
 
-// --- 13. DELETE ALLOCATION FUNCTION ---
+// 13. DELETE ALLOCATION FUNCTION 
 async function handleDeleteAllocation(id) {
     if (!confirm(`Are you sure you want to delete Allocation ID ${id}?`)) return;
     
@@ -510,7 +503,7 @@ async function handleDeleteAllocation(id) {
     }
 }
 
-// --- 14. UPDATE (PUT) - SHOW ALLOCATION FORM FUNCTION ---
+// 14. UPDATE (PUT) - SHOW ALLOCATION FORM FUNCTION 
 async function showEditAllocationForm(id) {
     const timestamp = new Date().getTime();
     const response = await fetch(`${BACKEND_URL}/api/allocation?t=${timestamp}`); 
@@ -522,7 +515,7 @@ async function showEditAllocationForm(id) {
         return;
     }
     
-    // Note: We only allow QUANTITY_NEEDED to be edited in this simple interface
+    
     const editFormHTML = `
         <form id="edit-allocation-form-${id}" class="edit-form-section" onsubmit="event.preventDefault(); handleUpdateAllocation(event, ${id})">
             <h4>Editing Allocation ID: ${id}</h4>
@@ -540,7 +533,7 @@ async function showEditAllocationForm(id) {
     container.innerHTML = editFormHTML;
 }
 
-// --- 15. UPDATE (PUT) - ALLOCATION SUBMISSION HANDLER ---
+// 15. UPDATE (PUT) - ALLOCATION SUBMISSION HANDLER 
 async function handleUpdateAllocation(event, id) {
     const form = event.target;
     const formData = new FormData(form);
@@ -576,7 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadResources();
     loadAllocations();
     
-    // Attach handlers for create forms
+  
     document.getElementById('create-event-form').addEventListener('submit', handleCreateEvent);
     document.getElementById('create-resource-form').addEventListener('submit', handleCreateResource);
     document.getElementById('create-allocation-form').addEventListener('submit', handleCreateAllocation);
