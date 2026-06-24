@@ -1,4 +1,4 @@
-DBMS Project – Car Resale Value Predictor
+DBMS Project 
 
 -------------------------------------------------
 📊 Project Overview
